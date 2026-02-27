@@ -1,72 +1,68 @@
 # API
 
-## Health
+## Response contract
 
-### `GET /api/health`
-
-Response:
-
-```json
-{"status": "ok"}
-```
-
-## Users
-
-Base schema for successful responses:
+Success:
 
 ```json
 {
-    "success": true,
     "data": {},
     "meta": {}
 }
 ```
 
-Base schema for error responses:
+Error:
 
 ```json
 {
-    "success": false,
     "error": {
         "code": "invalid_payload",
-        "message": "Request body is required."
+        "message": "Request body is required.",
+        "details": {}
     }
 }
 ```
 
-### `POST /api/users`
+## Health
 
-Request:
+- `GET /api/health`
+- `GET /api/v1/health`
 
-```json
-{
-    "email": "john@example.com",
-    "full_name": "John Doe",
-    "is_active": true
-}
-```
+## Auth
 
-### `GET /api/users/{id}`
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+- `POST /api/auth/refresh`
+- `POST /api/auth/logout`
+- `GET /api/auth/me`
 
-Returns a single user.
+## Users
 
-### `GET /api/users?page=1&per_page=10`
+- `POST /api/users`
+- `GET /api/users/{id}`
+- `GET /api/users?page=1&page_size=10`
+- `PATCH /api/users/{id}`
+- `DELETE /api/users/{id}`
 
-Returns paginated users with `meta`:
+Legacy `/api/users` remains active and `/api/v1/users` is also available.
+
+Pagination meta:
 
 ```json
 {
     "page": 1,
-    "per_page": 10,
-    "total": 1,
-    "pages": 1
+    "page_size": 10,
+    "total": 120,
+    "has_next": true
 }
 ```
 
-### `PATCH /api/users/{id}`
+## Admin
 
-Allowed fields: `email`, `full_name`, `is_active`.
+All endpoints require `admin` role.
 
-### `DELETE /api/users/{id}`
-
-Returns HTTP `204 No Content`.
+- `GET/POST /api/admin/roles`
+- `PATCH/DELETE /api/admin/roles/{id}`
+- `GET/POST /api/admin/permissions`
+- `PATCH/DELETE /api/admin/permissions/{id}`
+- `POST /api/admin/users/{id}/roles`
