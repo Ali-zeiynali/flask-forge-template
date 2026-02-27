@@ -1,23 +1,18 @@
 # Security Policy
 
-## Supported Versions
+## Supported versions
 
-Security updates are provided for the latest minor release.
+Security updates are provided for the latest release line.
 
-## Reporting a Vulnerability
+## Reporting a vulnerability
 
-Please report vulnerabilities privately by emailing: security@example.com
+Please report vulnerabilities privately to: `security@example.com`
 
 Include:
 
-- Affected version/commit
-- Reproduction steps
-- Impact assessment
-- Suggested remediation (if any)
+- affected version or commit
+- reproduction steps
+- expected impact
+- proof-of-concept if available
 
-## Disclosure Policy
-
-- We will acknowledge receipt within 5 business days.
-- We will investigate and validate findings.
-- We will coordinate a fix and release timeline.
-- We request responsible disclosure until a patch is available.
+We will acknowledge receipt, validate the issue, and coordinate a fix/release timeline.

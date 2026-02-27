@@ -1,74 +1,99 @@
 # Flask Forge Template
 
-A minimal, production-oriented Flask API template for fast project bootstrapping.
+Production-minded Flask API template with app factory, SQLAlchemy, migrations, test suite, and CI.
 
-## Features
+## What you get
 
-- Flask app factory and WSGI entrypoint
-- Health endpoint at `/api/health`
-- SQLAlchemy + Flask-Migrate wiring
-- Environment-based configuration
-- Structured logging setup
-- Pytest test suite
-- Ruff + Black code quality tooling
-- GitHub Actions CI
-- Docker and docker-compose support
+- App factory (`src/app.py`) + WSGI entrypoint (`src/wsgi.py`)
+- Health endpoint: `GET /api/health` -> `{"status":"ok"}`
+- Real CRUD example: `users` module (`POST/GET/LIST/PATCH/DELETE`)
+- Flask-SQLAlchemy + Flask-Migrate (SQLite by default)
+- Unified API success/error response format
+- Ruff + Black + Pytest + GitHub Actions CI
+- Docker and docker-compose for local development
 
-## Prerequisites
+## Requirements
 
 - Python 3.12+
 - pip
-- virtualenv (recommended)
 
-## Quickstart
+## Quickstart (PowerShell / Windows)
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -e ".[dev]"
+Copy-Item .env.example .env
+$env:PYTHONPATH="src"
+python -m flask --app wsgi:app db upgrade
+python -m flask --app wsgi:app run --debug
+```
+
+## Quickstart (bash)
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install -e ".[dev]"
+python -m pip install --upgrade pip
+python -m pip install -e ".[dev]"
 cp .env.example .env
-PYTHONPATH=src flask --app wsgi:app run --debug
+PYTHONPATH=src python -m flask --app wsgi:app db upgrade
+PYTHONPATH=src python -m flask --app wsgi:app run --debug
 ```
 
-API will be available at `http://127.0.0.1:5000`.
-
-## Development Commands
+## Quality checks
 
 ```bash
-make run
-make test
-make lint
-make format
+python -m ruff check .
+python -m black --check .
+python -m pytest
 ```
 
-## Environment Variables
+## API overview
 
-See `.env.example`.
+- `GET /api/health`
+- `POST /api/users`
+- `GET /api/users/{id}`
+- `GET /api/users?page=1&per_page=10`
+- `PATCH /api/users/{id}`
+- `DELETE /api/users/{id}`
 
-- `FLASK_ENV`: `development` | `testing` | `production`
-- `SECRET_KEY`: Flask secret key
-- `APP_NAME`: Application name
-- `DATABASE_URL`: SQLAlchemy database URL
-- `LOG_LEVEL`: Logging level (`DEBUG`, `INFO`, ...)
+See `docs/api.md` for full request/response examples.
 
-## Project Structure
+## Database migrations
+
+```bash
+PYTHONPATH=src python -m flask --app wsgi:app db upgrade
+PYTHONPATH=src python -m flask --app wsgi:app db migrate -m "message"
+```
+
+Alembic configuration is in `alembic.ini`, and migration scripts are under `src/migrations/versions`.
+
+## Project structure
 
 ```text
-.
-├── src/
-│   ├── api/
-│   ├── core/
-│   ├── db/
-│   ├── extensions/
-│   ├── utils/
-│   ├── app.py
-│   ├── config.py
-│   └── wsgi.py
-├── tests/
-├── docs/
-├── scripts/
-└── .github/workflows/
+src/
+  api/
+    health.py
+    users.py
+  core/
+  extensions/
+  app.py
+  config.py
+  wsgi.py
+tests/
+docs/
 ```
+
+## Documentation
+
+- `docs/index.md`
+- `docs/architecture.md`
+- `docs/configuration.md`
+- `docs/development.md`
+- `docs/api.md`
+- `docs/deployment.md`
 
 ## License
 
