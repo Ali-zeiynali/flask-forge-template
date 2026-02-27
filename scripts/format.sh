@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-black .
-ruff check --fix .
+python -m black .
+python -m ruff check --fix .

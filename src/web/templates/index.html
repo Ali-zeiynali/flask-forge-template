@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en" class="h-full bg-slate-950">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Flask Forge Template</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body class="h-full bg-gradient-to-b from-slate-950 to-slate-900 text-slate-100">
+        <main class="mx-auto flex min-h-full max-w-6xl flex-col px-6 py-10 lg:px-10">
+            <section class="rounded-3xl border border-slate-800 bg-slate-900/70 p-8 shadow-2xl shadow-cyan-950/40 backdrop-blur">
+                <div class="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
+                    <div class="max-w-2xl">
+                        <p class="inline-flex items-center rounded-full border border-cyan-400/30 bg-cyan-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-cyan-300">
+                            Production Ready Starter
+                        </p>
+                        <h1 class="mt-4 text-4xl font-bold tracking-tight text-white md:text-5xl">Flask Forge Template</h1>
+                        <p class="mt-4 text-base text-slate-300 md:text-lg">
+                            Production-ready Flask API template (Auth, RBAC, CI, Docker, Migrations, Tests)
+                        </p>
+                        <div class="mt-8 flex flex-wrap gap-3">
+                            <a href="/api/health" class="rounded-xl bg-cyan-500 px-5 py-3 text-sm font-semibold text-slate-900 shadow-lg shadow-cyan-500/30 transition hover:bg-cyan-400">API Health</a>
+                            <a href="{{ docs_url }}" class="rounded-xl border border-slate-700 px-5 py-3 text-sm font-semibold text-slate-100 transition hover:border-cyan-400 hover:text-cyan-300">Docs</a>
+                            <a href="{{ github_url }}" class="rounded-xl border border-slate-700 px-5 py-3 text-sm font-semibold text-slate-100 transition hover:border-cyan-400 hover:text-cyan-300">GitHub</a>
+                        </div>
+                    </div>
+                    <div class="mx-auto w-full max-w-xs lg:mx-0">
+                        <svg viewBox="0 0 220 220" role="img" aria-label="Rocket illustration" class="h-auto w-full drop-shadow-[0_15px_35px_rgba(34,211,238,0.5)]">
+                            <defs>
+                                <linearGradient id="rocketBody" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#67e8f9" />
+                                    <stop offset="100%" stop-color="#0ea5e9" />
+                                </linearGradient>
+                                <linearGradient id="rocketFlame" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" stop-color="#fef08a" />
+                                    <stop offset="100%" stop-color="#f97316" />
+                                </linearGradient>
+                            </defs>
+                            <circle cx="110" cy="110" r="96" fill="rgba(15,23,42,0.65)" stroke="rgba(148,163,184,0.25)" stroke-width="2" />
+                            <path d="M110 36c26 18 35 45 35 74v29H75v-29c0-29 9-56 35-74z" fill="url(#rocketBody)" stroke="#bae6fd" stroke-width="3" />
+                            <circle cx="110" cy="96" r="14" fill="#0f172a" stroke="#e0f2fe" stroke-width="3" />
+                            <path d="M75 126l-20 18 20 6z" fill="#38bdf8" />
+                            <path d="M145 126l20 18-20 6z" fill="#38bdf8" />
+                            <path d="M98 139h24l-12 35z" fill="url(#rocketFlame)" />
+                            <path d="M42 166c20 8 36 10 52 6" stroke="#22d3ee" stroke-width="3" stroke-linecap="round" opacity="0.7" />
+                            <path d="M168 166c-20 8-36 10-52 6" stroke="#22d3ee" stroke-width="3" stroke-linecap="round" opacity="0.7" />
+                        </svg>
+                    </div>
+                </div>
+            </section>
+            <section class="mt-10 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+                {% for key, value in status_cards.items() %}
+                <article class="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 shadow-lg shadow-slate-950/60">
+                    <p class="text-xs uppercase tracking-wide text-slate-400">{{ key }}</p>
+                    <p class="mt-2 text-lg font-semibold text-cyan-300">{{ value }}</p>
+                </article>
+                {% endfor %}
+            </section>
+        </main>
+    </body>
+</html>

@@ -1,8 +1,21 @@
-# Flask Forge Template
+# Flask Forge Template 🚀
 
-Production-minded Flask API template with JWT auth, RBAC, migrations, tests, CI, and Docker.
+A production-ready Flask starter focused on clean APIs, secure authentication, role-based access control, and a modern developer workflow.
 
-## Quickstart (PowerShell)
+## Features
+
+- 🔐 JWT Auth (register/login/refresh/logout/me)
+- 🛡️ RBAC + Permissions + Decorators
+- 🧱 Clean Architecture
+- 🧪 Tests + Fixtures + Coverage
+- ✅ CI (GitHub Actions)
+- 🐳 Docker + Compose
+- 🗄️ SQLAlchemy + Migrations
+- 🌐 Landing Page (Tailwind Dark)
+- 🔎 Lint/Format (ruff/black)
+- 🔒 Security Headers + Audit tools
+
+## Quickstart (Windows PowerShell)
 
 ```powershell
 python -m venv .venv
@@ -31,48 +44,46 @@ PYTHONPATH=src python -m flask --app wsgi:app forge create-admin --email admin@e
 PYTHONPATH=src python -m flask --app wsgi:app run --debug
 ```
 
-## Core APIs
-
-- Health: `GET /api/health` (legacy + `/api/v1/health`)
-- Auth: `/api/auth/register|login|refresh|logout|me`
-- Users: `/api/users` CRUD (legacy + `/api/v1/users`)
-- Admin (admin role only): `/api/admin/roles`, `/api/admin/permissions`, `/api/admin/users/{id}/roles`
-
-## Quality checks
+## Commands
 
 ```bash
 python -m ruff check .
 python -m black --check .
-python -m pytest
+PYTHONPATH=src python -m pytest
+PYTHONPATH=src python -m pytest --cov=src --cov-report=term-missing
+python -m bandit -r src
+python -m pip_audit
+PYTHONPATH=src python -m flask --app wsgi:app forge seed
 ```
 
-## Migrations
+## Project Structure
 
-```bash
-PYTHONPATH=src python -m flask --app wsgi:app db upgrade
-PYTHONPATH=src python -m flask --app wsgi:app db migrate -m "message"
+```text
+src/
+  api/            # API blueprints (health, auth, users, admin)
+  core/           # authz, errors, responses, security
+  extensions/     # db, migrate, jwt, cors, security headers
+  web/            # landing blueprint and template
+  app.py          # app factory
+  cli.py          # forge commands
+tests/            # pytest test suite
+docs/             # detailed documentation
 ```
 
-## Auth and permission model
+## API Reference
 
-Default roles: `admin`, `staff`, `user`.
+- [API Overview](docs/api.md)
+- [Auth Guide](docs/auth.md)
+- [RBAC Guide](docs/rbac.md)
 
-Default permissions: `users:read`, `users:write`, `roles:read`, `roles:write`.
+## Contributing
 
-Users endpoints are protected by decorators:
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
-- `@require_auth`
-- `@require_roles(*roles)`
-- `@require_permissions(*permissions)`
-- `@require_owner_or_permission(permission, owner_param="user_id")`
+## Security
 
-## Example curl
+See [SECURITY.md](SECURITY.md) and [docs/security.md](docs/security.md).
 
-```bash
-curl -X POST http://127.0.0.1:5000/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"admin@example.com","password":"Password123"}'
+## License
 
-curl http://127.0.0.1:5000/api/auth/me \
-  -H "Authorization: Bearer <ACCESS_TOKEN>"
-```
+MIT — see [LICENSE](LICENSE).
