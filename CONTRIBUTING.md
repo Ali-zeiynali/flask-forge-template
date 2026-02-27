@@ -1,43 +1,42 @@
 # Contributing
 
-Thanks for contributing.
+Thanks for investing time in this project.
 
-## Development Setup
-
-1. Create a virtual environment.
-2. Install dependencies.
-3. Copy environment variables.
+## Setup
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install -e ".[dev]"
+python -m pip install --upgrade pip
+python -m pip install -e ".[dev]"
 cp .env.example .env
 ```
 
-## Run Locally
+PowerShell notes:
 
-```bash
-make run
+```powershell
+.\.venv\Scripts\Activate.ps1
+$env:PYTHONPATH="src"
 ```
 
-## Quality Checks
+## Run locally
 
 ```bash
-make lint
-make format
-make test
+PYTHONPATH=src python -m flask --app wsgi:app db upgrade
+PYTHONPATH=src python -m flask --app wsgi:app run --debug
 ```
 
-## Commit Guidelines
+## Quality gates
 
-- Use clear, imperative commit messages.
-- Keep commits focused and small.
-- Update tests and documentation with changes.
+```bash
+python -m ruff check .
+python -m black --check .
+python -m pytest
+```
+
+## Pull requests
+
+- Keep changes focused.
+- Add/adjust tests for behavior changes.
+- Update docs when behavior or setup changes.
 - Update `CHANGELOG.md` for user-visible changes.
-
-## Pull Request Guidelines
-
-- Fill out the PR template.
-- Ensure CI is green.
-- Describe intent, scope, and test evidence.

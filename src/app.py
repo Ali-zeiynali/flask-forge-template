@@ -1,7 +1,9 @@
 from flask import Flask
 
 from api.health import health_bp
+from api.users import users_bp
 from config import get_config
+from core.errors import register_error_handlers
 from core.logging import configure_logging
 from extensions.cors import init_cors
 from extensions.db import db
@@ -20,5 +22,7 @@ def create_app(config_name: str | None = None) -> Flask:
     init_cors(app)
 
     app.register_blueprint(health_bp, url_prefix="/api")
+    app.register_blueprint(users_bp, url_prefix="/api")
+    register_error_handlers(app)
 
     return app

@@ -7,3 +7,8 @@ services:
             - .env
         environment:
             DATABASE_URL: sqlite:////app/dev.db
+        volumes:
+            - ./:/app
+        command: >
+            sh -c "python -m flask --app wsgi:app db upgrade &&
+            gunicorn --bind 0.0.0.0:8000 --chdir src wsgi:app"
