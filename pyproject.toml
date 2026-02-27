@@ -1,0 +1,36 @@
+[project]
+name = "flask-forge-template"
+version = "0.1.0"
+description = "Production-ready Flask API template with tooling, Docker, and CI."
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+authors = [{ name = "Ali Zeinali" }]
+dependencies = [
+  "Flask>=3.0.0",
+  "flask-sqlalchemy>=3.1.1",
+  "flask-migrate>=4.0.7",
+  "python-dotenv>=1.0.1",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0.0",
+  "ruff>=0.6.0",
+  "black>=24.0.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.black]
+line-length = 100
+target-version = ["py312"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
