@@ -3,12 +3,12 @@ from __future__ import annotations
 import logging
 import uuid
 
-from flask import Flask, g, request
+from flask import Flask, g, has_request_context, request
 
 
 class RequestIdFilter(logging.Filter):
     def filter(self, record: logging.LogRecord) -> bool:
-        record.request_id = getattr(g, "request_id", "-")
+        record.request_id = getattr(g, "request_id", "-") if has_request_context() else "-"
         return True
 
 

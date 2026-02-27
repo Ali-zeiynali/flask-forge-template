@@ -1,15 +1,23 @@
-PYTHONPATH=src
-
 run:
-	$(PYTHONPATH) flask --app wsgi:app run --debug
+	PYTHONPATH=src python -m flask --app wsgi:app run --debug
 
 test:
-	$(PYTHONPATH) pytest
+	PYTHONPATH=src python -m pytest
+
+coverage:
+	PYTHONPATH=src python -m pytest --cov=src --cov-report=term-missing
 
 lint:
-	ruff check .
-	black --check .
+	python -m ruff check .
+	python -m black --check .
 
 format:
-	black .
-	ruff check --fix .
+	python -m black .
+	python -m ruff check --fix .
+
+audit:
+	python -m bandit -r src
+	python -m pip_audit
+
+seed:
+	PYTHONPATH=src python -m flask --app wsgi:app forge seed

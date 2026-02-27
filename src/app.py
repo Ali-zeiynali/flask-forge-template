@@ -13,6 +13,8 @@ from extensions.cors import init_cors
 from extensions.db import db
 from extensions.jwt import init_jwt
 from extensions.migrate import migrate
+from extensions.security_headers import init_security_headers
+from web import web_bp
 
 
 def create_app(config_name: str | None = None) -> Flask:
@@ -24,7 +26,9 @@ def create_app(config_name: str | None = None) -> Flask:
     migrate.init_app(app, db)
     init_jwt(app)
     init_cors(app)
+    init_security_headers(app)
 
+    app.register_blueprint(web_bp)
     app.register_blueprint(health_bp, url_prefix="/api")
     app.register_blueprint(health_bp, url_prefix="/api/v1", name="health_v1")
     app.register_blueprint(users_bp, url_prefix="/api")

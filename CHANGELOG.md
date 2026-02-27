@@ -6,21 +6,18 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
-- JWT authentication module with register/login/refresh/logout/me endpoints.
-- RBAC data model (`roles`, `permissions`, `user_roles`, `role_permissions`) and admin management API.
-- Authorization decorators for auth, role checks, permission checks, and owner-or-permission checks.
-- CLI commands: `flask forge seed` and `flask forge create-admin`.
-- Login brute-force protection with in-memory rate limit window.
-- Request-id aware structured logging and configurable CORS support.
-- New migration `20260227_000002` for auth/RBAC tables and user auth fields.
-- Deterministic tests for auth, admin authorization, and permission-protected users CRUD.
+- Web landing blueprint at `/` with a responsive Tailwind dark UI, inline rocket SVG, runtime status cards, and CTA shortcuts to health/docs/GitHub.
+- Security headers integration via `Flask-Talisman` with configurable toggles (`ENABLE_SECURITY_HEADERS`, `FORCE_HTTPS`, `ENABLE_HSTS`).
+- Password hashing migrated to `argon2` while preserving compatibility with existing werkzeug `scrypt` hashes.
+- New docs pages: frontend, security, auth, RBAC, CLI, and testing guides.
+- Security and quality commands for coverage, `bandit`, and `pip-audit` in Makefile/scripts and CI security job.
+- Tests for landing page rendering and production security headers behavior.
 
 ### Changed
 
-- Unified response contract to `{data, meta}` for success and `{error}` for failures.
-- Users endpoints now require permission-based authorization while preserving `/api/users` compatibility and adding `/api/v1` aliases.
-- Configuration and `.env.example` expanded for JWT, CORS, and rate limiting settings.
-- Documentation updated with RBAC, seed workflow, migration usage, and PowerShell-first commands.
+- App factory now registers a dedicated web blueprint and security headers extension without breaking existing `/api` and `/api/v1` routes.
+- README rewritten with PowerShell-first onboarding, command catalog, architecture snapshot, and doc references.
+- `.env.example` and config expanded with app metadata, docs/GitHub links, CI status, and security header settings.
 
 ## [0.1.0] - 2026-02-27
 

@@ -1,7 +1,24 @@
-# Documentation
+# Documentation Index
+
+## Getting Started
+
+- [Development](development.md)
+- [Configuration](configuration.md)
+- [Deployment](deployment.md)
+- [CLI](cli.md)
+
+## Product and Architecture
 
 - [Architecture](architecture.md)
-- [Configuration](configuration.md)
-- [Development](development.md)
+- [Frontend Landing](frontend.md)
+
+## API and Access Control
+
 - [API](api.md)
-- [Deployment](deployment.md)
+- [Authentication](auth.md)
+- [RBAC](rbac.md)
+
+## Quality and Security
+
+- [Testing](testing.md)
+- [Security](security.md)
