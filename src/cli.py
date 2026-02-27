@@ -2,14 +2,23 @@ from __future__ import annotations
 
 import click
 from flask import Flask
+from flask_migrate import current as migration_current
 
 from core.security import hash_password
+from core.settings import safe_config_snapshot
 from extensions.db import db
 from models import Permission, Role, User
 
 DEFAULT_ROLE_PERMISSIONS = {
-    "admin": ["users:read", "users:write", "roles:read", "roles:write"],
-    "staff": ["users:read", "users:write", "roles:read"],
+    "admin": [
+        "users:read",
+        "users:write",
+        "roles:read",
+        "roles:write",
+        "permissions:read",
+        "permissions:write",
+    ],
+    "staff": ["users:read", "users:write", "roles:read", "permissions:read"],
     "user": [],
 }
 
@@ -39,7 +48,7 @@ def seed_rbac() -> None:
 def register_cli_commands(app: Flask) -> None:
     @app.cli.group("forge")
     def forge_cli():
-        pass
+        """FlaskForge project management commands."""
 
     @forge_cli.command("seed")
     def forge_seed():
@@ -72,3 +81,17 @@ def register_cli_commands(app: Flask) -> None:
 
         db.session.commit()
         click.echo(f"Admin user ready: {email.lower()}")
+
+    @forge_cli.command("doctor")
+    def forge_doctor():
+        healthy_db = True
+        try:
+            db.session.execute(db.text("SELECT 1"))
+        except Exception:
+            healthy_db = False
+
+        click.echo("FlaskForge doctor report")
+        click.echo(f"- db_connection: {'ok' if healthy_db else 'failed'}")
+        click.echo(f"- migrations_revision: {migration_current()}")
+        for key, value in safe_config_snapshot(dict(app.config)).items():
+            click.echo(f"- {key}: {value}")

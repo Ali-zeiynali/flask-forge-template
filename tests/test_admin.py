@@ -43,3 +43,36 @@ def test_non_admin_forbidden(client, user_headers, users, admin_headers):
         json={"name": "staff", "action": "remove"},
     )
     assert remove.status_code == 200
+
+
+def test_assign_and_remove_permission_from_role(client, admin_headers):
+    perm = client.post(
+        "/api/admin/permissions",
+        headers=admin_headers,
+        json={"name": "metrics:read", "description": "Read metrics"},
+    )
+    assert perm.status_code == 201
+
+    role = client.post(
+        "/api/admin/roles",
+        headers=admin_headers,
+        json={"name": "metrics", "description": "Metrics role"},
+    )
+    assert role.status_code == 201
+    role_id = role.get_json()["data"]["id"]
+
+    assign = client.post(
+        f"/api/admin/roles/{role_id}/permissions",
+        headers=admin_headers,
+        json={"name": "metrics:read", "action": "assign"},
+    )
+    assert assign.status_code == 200
+    assert "metrics:read" in assign.get_json()["data"]["permissions"]
+
+    remove = client.post(
+        f"/api/admin/roles/{role_id}/permissions",
+        headers=admin_headers,
+        json={"name": "metrics:read", "action": "remove"},
+    )
+    assert remove.status_code == 200
+    assert "metrics:read" not in remove.get_json()["data"]["permissions"]

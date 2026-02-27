@@ -134,7 +134,7 @@ def list_users():
 
 
 @users_bp.patch("/users/<int:user_id>")
-@require_permissions("users:write")
+@require_owner_or_permission("users:write")
 def update_user(user_id: int):
     user = _get_user_or_404(user_id)
     updates = _validate_patch_payload(request.get_json(silent=True))
