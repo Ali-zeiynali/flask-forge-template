@@ -3,21 +3,23 @@
 ## Runtime layout
 
 - `src/app.py`: application factory and extension/blueprint registration.
-- `src/wsgi.py`: WSGI entrypoint.
+- `src/flaskforge/wsgi.py`: package-based WSGI entrypoint for Flask CLI.
 - `src/config.py`: environment-aware config classes.
-- `src/api/`: API modules (`health`, `users`).
-- `src/core/`: shared concerns (logging, errors, response schema).
-- `src/extensions/`: integration points for db/migrations/cors/jwt placeholder.
+- `src/api/v1/`: versioned API modules (`health`, `auth`, `users`, `admin`).
+- `src/core/`: shared concerns (logging, errors, response contract, authz).
+- `src/extensions/`: db/migrations/cors/jwt/security-headers integrations.
+
+Compatibility aliases are kept in `src/api/*.py` so both `/api/*` and `/api/v1/*` stay active.
 
 ## Request flow
 
-1. `create_app` loads selected config.
-2. Extensions are initialized (`db`, `migrate`, `cors`, `jwt placeholder`).
-3. Blueprints are mounted under `/api`.
+1. `create_app` loads selected config and initializes extensions.
+2. JWT, DB, migrations, CORS, and security headers are wired from config.
+3. Blueprints are mounted for both `/api` and `/api/v1`.
 4. Errors are normalized by `core.errors.register_error_handlers`.
 
 ## Data layer
 
-- SQLAlchemy model `User` lives in `src/api/users.py`.
-- SQLite is default for local dev.
-- Migrations are managed through Flask-Migrate + Alembic.
+- Core models live in `src/models.py`: `User`, `Role`, `Permission`, and association tables.
+- SQLite is default for local development.
+- Migrations are managed through Flask-Migrate + Alembic in `src/migrations`.

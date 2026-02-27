@@ -8,26 +8,11 @@
 - `POST /api/auth/logout`
 - `GET /api/auth/me`
 
-All endpoints are also available under `/api/v1`.
+Versioned aliases exist under `/api/v1/auth/*`.
 
-## Login example
+## Notes
 
-```bash
-curl -X POST http://127.0.0.1:5000/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"admin@example.com","password":"Password123"}'
-```
-
-## Protected endpoint example
-
-```bash
-curl http://127.0.0.1:5000/api/auth/me \
-  -H "Authorization: Bearer <ACCESS_TOKEN>"
-```
-
-## Refresh example
-
-```bash
-curl -X POST http://127.0.0.1:5000/api/auth/refresh \
-  -H "Authorization: Bearer <REFRESH_TOKEN>"
-```
+- Access/refresh tokens are JWT-based.
+- Password hashing uses Argon2.
+- Refresh requires refresh token.
+- Logout revokes the current access token in memory blocklist.

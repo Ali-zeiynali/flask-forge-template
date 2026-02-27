@@ -1,6 +1,6 @@
 def test_register_login_refresh_me_logout_flow(client):
     register_response = client.post(
-        "/api/auth/register",
+        "/api/v1/auth/register",
         json={
             "email": "new@example.com",
             "full_name": "New User",
@@ -10,26 +10,26 @@ def test_register_login_refresh_me_logout_flow(client):
     assert register_response.status_code == 201
 
     login_response = client.post(
-        "/api/auth/login",
+        "/api/v1/auth/login",
         json={"email": "new@example.com", "password": "Password123"},
     )
     assert login_response.status_code == 200
     tokens = login_response.get_json()["data"]
 
     me_response = client.get(
-        "/api/auth/me", headers={"Authorization": f"Bearer {tokens['access_token']}"}
+        "/api/v1/auth/me", headers={"Authorization": f"Bearer {tokens['access_token']}"}
     )
     assert me_response.status_code == 200
     assert me_response.get_json()["data"]["email"] == "new@example.com"
 
     refresh_response = client.post(
-        "/api/auth/refresh", headers={"Authorization": f"Bearer {tokens['refresh_token']}"}
+        "/api/v1/auth/refresh", headers={"Authorization": f"Bearer {tokens['refresh_token']}"}
     )
     assert refresh_response.status_code == 200
     assert "access_token" in refresh_response.get_json()["data"]
 
     logout_response = client.post(
-        "/api/auth/logout", headers={"Authorization": f"Bearer {tokens['access_token']}"}
+        "/api/v1/auth/logout", headers={"Authorization": f"Bearer {tokens['access_token']}"}
     )
     assert logout_response.status_code == 200
 

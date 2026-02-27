@@ -1,31 +1,37 @@
 from __future__ import annotations
 
-from typing import TypedDict
+from typing import Any
+
+from core.errors import ValidationError
 
 
-class RegisterRequest(TypedDict):
-    email: str
-    full_name: str
-    password: str
+class AuthSchemas:
+    @staticmethod
+    def require_payload(payload: dict[str, Any] | None) -> dict[str, Any]:
+        if not payload:
+            raise ValidationError("Request body is required.")
+        return payload
 
+    @staticmethod
+    def parse_email_password(payload: dict[str, Any] | None) -> tuple[str, str]:
+        data = AuthSchemas.require_payload(payload)
+        email = str(data.get("email", "")).strip().lower()
+        password = str(data.get("password", ""))
+        if not email or "@" not in email:
+            raise ValidationError("A valid email is required.", {"field": "email"})
+        if not password:
+            raise ValidationError("password is required.", {"field": "password"})
+        return email, password
 
-class LoginRequest(TypedDict):
-    email: str
-    password: str
-
-
-class TokenResponse(TypedDict):
-    access_token: str
-    refresh_token: str
-
-
-class RefreshResponse(TypedDict):
-    access_token: str
-
-
-class MeResponse(TypedDict):
-    id: int
-    email: str
-    full_name: str
-    is_active: bool
-    roles: list[str]
+    @staticmethod
+    def parse_register(payload: dict[str, Any] | None) -> tuple[str, str, str]:
+        email, password = AuthSchemas.parse_email_password(payload)
+        full_name = str((payload or {}).get("full_name", "")).strip()
+        if not full_name:
+            raise ValidationError("full_name is required.", {"field": "full_name"})
+        if len(password) < 8:
+            raise ValidationError(
+                "password must be at least 8 characters.",
+                {"field": "password", "min_length": 8},
+            )
+        return email, full_name, password
