@@ -13,7 +13,7 @@ from flask_jwt_extended import (
 )
 
 from core.authz import require_auth
-from core.errors import APIError
+from core.errors import APIError, RateLimitError
 from core.responses import created_response, success_response
 from core.security import hash_password, verify_password
 from extensions.db import db
@@ -38,12 +38,14 @@ def _validate_email_password(payload: dict[str, Any] | None) -> tuple[str, str]:
 
 def _check_login_rate_limit() -> None:
     client_id = request.remote_addr or "unknown"
+    if not current_app.config.get("RATE_LIMIT_ENABLED", True):
+        return
     limit = current_app.config["RATE_LIMIT_LOGIN_PER_MINUTE"]
     now = datetime.now(UTC).timestamp()
     window_start = now - 60
     history = [value for value in _LOGIN_ATTEMPTS.get(client_id, []) if value >= window_start]
     if len(history) >= limit:
-        raise APIError("auth_rate_limited", "Too many login attempts.", 429)
+        raise RateLimitError("Too many login attempts.")
     history.append(now)
     _LOGIN_ATTEMPTS[client_id] = history
 

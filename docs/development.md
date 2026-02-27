@@ -31,3 +31,10 @@ python -m ruff check .
 python -m black --check .
 python -m pytest
 ```
+
+
+## Useful CLI
+
+- `python -m flask --app wsgi:app forge seed`
+- `python -m flask --app wsgi:app forge create-admin --email admin@example.com --password Password123`
+- `python -m flask --app wsgi:app forge doctor`

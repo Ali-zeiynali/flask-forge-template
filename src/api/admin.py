@@ -134,3 +134,27 @@ def assign_or_remove_roles(user_id: int):
         raise APIError("invalid_action", "action must be assign or remove.", 400)
     db.session.commit()
     return success_response(user.to_dict())
+
+
+@admin_bp.post("/admin/roles/<int:role_id>/permissions")
+@require_roles("admin")
+def assign_or_remove_permissions(role_id: int):
+    role = db.session.get(Role, role_id)
+    if role is None:
+        raise APIError("not_found", "Role not found.", 404)
+    payload = request.get_json(silent=True) or {}
+    permission_name = _required_name(payload)
+    action = str(payload.get("action", "assign")).lower()
+    permission = Permission.query.filter_by(name=permission_name).first()
+    if permission is None:
+        raise APIError("not_found", "Permission not found.", 404)
+    if action == "assign":
+        if permission not in role.permissions:
+            role.permissions.append(permission)
+    elif action == "remove":
+        if permission in role.permissions:
+            role.permissions.remove(permission)
+    else:
+        raise APIError("invalid_action", "action must be assign or remove.", 400)
+    db.session.commit()
+    return success_response(role.to_dict())

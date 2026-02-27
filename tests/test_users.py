@@ -71,3 +71,20 @@ def test_users_permission_and_error_cases(client, admin_headers, user_headers):
 
     invalid_pagination = client.get("/api/users?page=0&page_size=10", headers=admin_headers)
     assert invalid_pagination.status_code == 400
+
+
+def test_regular_user_can_update_self_only(client, users, user_headers):
+    own_update = client.patch(
+        f"/api/users/{users['user'].id}",
+        headers=user_headers,
+        json={"full_name": "Self Updated"},
+    )
+    assert own_update.status_code == 200
+    assert own_update.get_json()["data"]["full_name"] == "Self Updated"
+
+    other_update = client.patch(
+        f"/api/users/{users['admin'].id}",
+        headers=user_headers,
+        json={"full_name": "Nope"},
+    )
+    assert other_update.status_code == 403

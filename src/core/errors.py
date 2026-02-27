@@ -19,6 +19,38 @@ class APIError(Exception):
     details: dict[str, Any] | None = None
 
 
+class ValidationError(APIError):
+    def __init__(self, message: str, details: dict[str, Any] | None = None):
+        super().__init__("validation_error", message, 400, details)
+
+
+class NotFoundError(APIError):
+    def __init__(self, message: str = "Resource not found."):
+        super().__init__("not_found", message, 404)
+
+
+class ConflictError(APIError):
+    def __init__(self, message: str = "Resource conflict."):
+        super().__init__("conflict", message, 409)
+
+
+class AuthError(APIError):
+    def __init__(self, message: str = "Authentication required."):
+        super().__init__("auth_error", message, 401)
+
+
+class PermissionDeniedError(APIError):
+    def __init__(
+        self, message: str = "Insufficient permissions.", details: dict[str, Any] | None = None
+    ):
+        super().__init__("forbidden", message, 403, details)
+
+
+class RateLimitError(APIError):
+    def __init__(self, message: str = "Too many requests."):
+        super().__init__("rate_limited", message, 429)
+
+
 def register_error_handlers(app: Flask):
     @app.errorhandler(APIError)
     def handle_api_error(error: APIError):

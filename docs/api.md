@@ -66,3 +66,4 @@ All endpoints require `admin` role.
 - `GET/POST /api/admin/permissions`
 - `PATCH/DELETE /api/admin/permissions/{id}`
 - `POST /api/admin/users/{id}/roles`
+- `POST /api/admin/roles/{id}/permissions`
