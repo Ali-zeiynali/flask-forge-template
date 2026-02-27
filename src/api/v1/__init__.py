@@ -1,6 +1,6 @@
-from api.admin import admin_bp
-from api.auth import auth_bp
-from api.health import health_bp
-from api.users import users_bp
+from api.v1.admin.routes import admin_bp
+from api.v1.auth.routes import auth_bp
+from api.v1.health import health_bp
+from api.v1.users.routes import users_bp
 
 __all__ = ["admin_bp", "auth_bp", "health_bp", "users_bp"]

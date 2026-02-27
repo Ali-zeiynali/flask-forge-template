@@ -6,31 +6,16 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
-- Web landing blueprint at `/` with a responsive Tailwind dark UI, inline rocket SVG, runtime status cards, and CTA shortcuts to health/docs/GitHub.
-- Security headers integration via `Flask-Talisman` with configurable toggles (`ENABLE_SECURITY_HEADERS`, `FORCE_HTTPS`, `ENABLE_HSTS`).
-- Password hashing migrated to `argon2` while preserving compatibility with existing werkzeug `scrypt` hashes.
-- New docs pages: frontend, security, auth, RBAC, CLI, and testing guides.
-- Security and quality commands for coverage, `bandit`, and `pip-audit` in Makefile/scripts and CI security job.
-- Tests for landing page rendering and production security headers behavior.
+- Package compatibility entrypoint `src/flaskforge/wsgi.py` so Flask can run with `--app flaskforge.wsgi:app`.
+- Versioned admin module under `api/v1/admin` with role/permission management and assignment endpoints.
 
 ### Changed
 
-- App factory now registers a dedicated web blueprint and security headers extension without breaking existing `/api` and `/api/v1` routes.
-- README rewritten with PowerShell-first onboarding, command catalog, architecture snapshot, and doc references.
-- `.env.example` and config expanded with app metadata, docs/GitHub links, CI status, and security header settings.
-
-### Added
-
-- Admin endpoint `POST /api/admin/roles/{id}/permissions` for role-permission assignment/removal.
-- New CLI command `forge doctor` for safe runtime diagnostics.
-
-### Changed
-
-- Config now supports `APP_ENV`, `JWT_ACCESS_EXPIRES`, `JWT_REFRESH_EXPIRES`, `RATE_LIMIT_ENABLED`, `SECURITY_HEADERS_ENABLED`, and `ADMIN_SEED_ENABLED` with legacy aliases.
-- Authorization now allows regular users to update only their own profile while preserving admin/staff write controls.
-- Response helpers expanded to include `ok`, `created`, `no_content`, and `paginated` with backward-compatible aliases.
-- Logging now emits request/response summaries with correlation ID propagation via `X-Request-ID`.
-- Docs updated for new env vars and admin API coverage.
+- Completed `api/v1` modules for auth/users with real schema validation, services, repository usage, and runtime RBAC enforcement.
+- Preserved `/api/*` endpoints as compatibility aliases while wiring the canonical implementation in `/api/v1/*`.
+- Unified health endpoint contract to the same envelope used by the rest of the API.
+- Updated `scripts/init_db.sh` to run migrations plus RBAC seed.
+- Synced API/auth/RBAC/architecture docs and README command examples with actual runtime behavior.
 
 ## [0.1.0] - 2026-02-27
 

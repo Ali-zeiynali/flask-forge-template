@@ -16,7 +16,7 @@ Error:
 ```json
 {
     "error": {
-        "code": "invalid_payload",
+        "code": "validation_error",
         "message": "Request body is required.",
         "details": {}
     }
@@ -28,6 +28,12 @@ Error:
 - `GET /api/health`
 - `GET /api/v1/health`
 
+Both return envelope data:
+
+```json
+{"data": {"status": "ok"}}
+```
+
 ## Auth
 
 - `POST /api/auth/register`
@@ -35,6 +41,8 @@ Error:
 - `POST /api/auth/refresh`
 - `POST /api/auth/logout`
 - `GET /api/auth/me`
+
+All endpoints are also available under `/api/v1/auth/*`.
 
 ## Users
 
@@ -44,7 +52,7 @@ Error:
 - `PATCH /api/users/{id}`
 - `DELETE /api/users/{id}`
 
-Legacy `/api/users` remains active and `/api/v1/users` is also available.
+All endpoints are also available under `/api/v1/users/*`.
 
 Pagination meta:
 
@@ -67,3 +75,5 @@ All endpoints require `admin` role.
 - `PATCH/DELETE /api/admin/permissions/{id}`
 - `POST /api/admin/users/{id}/roles`
 - `POST /api/admin/roles/{id}/permissions`
+
+All endpoints are also available under `/api/v1/admin/*`.
