@@ -1,23 +1,28 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "flask-forge-template"
 version = "0.1.0"
 description = "Production-ready Flask API template with tooling, Docker, and CI."
 readme = "README.md"
-requires-python = ">=3.11,<4"
+requires-python = ">=3.12,<4"
 license = { text = "MIT" }
-authors = [{ name = "Ali Zeinali" }]
+authors = [{ name = "flask-forge-template contributors" }]
 dependencies = [
-  "Flask>=3.0.0",
-  "flask-sqlalchemy>=3.1.1",
-  "flask-migrate>=4.0.7",
-  "python-dotenv>=1.0.1",
+    "Flask>=3.0.0",
+    "flask-sqlalchemy>=3.1.1",
+    "flask-migrate>=4.0.7",
+    "python-dotenv>=1.0.1",
+    "gunicorn>=22.0.0",
 ]
 
 [project.optional-dependencies]
 dev = [
-  "pytest>=8.0.0",
-  "ruff>=0.6.0",
-  "black>=24.0.0",
+    "pytest>=8.0.0",
+    "ruff>=0.6.0",
+    "black>=24.0.0",
 ]
 
 [tool.pytest.ini_options]
