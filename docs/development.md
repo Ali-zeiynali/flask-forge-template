@@ -1,40 +1,60 @@
-# Development
+# Development Guide
 
-## Setup
+## Prerequisites
+
+- Python 3.12+
+- Git
+
+## Local bootstrap
+
+### macOS / Linux
 
 ```bash
-python -m venv .venv
+bash scripts/bootstrap.sh
+```
+
+### Windows PowerShell
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\bootstrap.ps1
+```
+
+Both scripts install dependencies, create `.env` when needed, run migrations, and seed RBAC data.
+
+## Run the app
+
+### macOS / Linux
+
+```bash
 source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -e ".[dev]"
-cp .env.example .env
-PYTHONPATH=src python -m flask --app wsgi:app db upgrade
-PYTHONPATH=src python -m flask --app wsgi:app forge seed
+python -m flask --app flaskforge.wsgi:app run --debug
 ```
 
-## Create admin
+### Windows PowerShell
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+python -m flask --app flaskforge.wsgi:app run --debug
+```
+
+## Verify startup
+
+- Landing page: `http://127.0.0.1:5000/`
+- Health endpoint: `http://127.0.0.1:5000/api/health`
+- Versioned health endpoint: `http://127.0.0.1:5000/api/v1/health`
+
+## Common workflows
 
 ```bash
-PYTHONPATH=src python -m flask --app wsgi:app forge create-admin --email admin@example.com --password Password123
+# apply migrations
+python -m flask --app flaskforge.wsgi:app db upgrade
+
+# create new migration
+python -m flask --app flaskforge.wsgi:app db migrate -m "describe change"
+
+# seed RBAC
+python -m flask --app flaskforge.wsgi:app forge seed
+
+# create/update admin user
+python -m flask --app flaskforge.wsgi:app forge create-admin --email admin@yourdomain.com --password '<strong-password>' --full-name 'Admin User'
 ```
-
-## Run
-
-```bash
-PYTHONPATH=src python -m flask --app wsgi:app run --debug
-```
-
-## Checks
-
-```bash
-python -m ruff check .
-python -m black --check .
-python -m pytest
-```
-
-
-## Useful CLI
-
-- `python -m flask --app wsgi:app forge seed`
-- `python -m flask --app wsgi:app forge create-admin --email admin@example.com --password Password123`
-- `python -m flask --app wsgi:app forge doctor`

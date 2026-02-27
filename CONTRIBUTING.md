@@ -1,42 +1,34 @@
 # Contributing
 
-Thanks for investing time in this project.
+Thanks for contributing to Flask Forge Template.
 
-## Setup
+Repository: https://github.com/Ali-zeiynali/flask-forge-template
+
+## Development setup
+
+### macOS / Linux
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -e ".[dev]"
-cp .env.example .env
+bash scripts/bootstrap.sh
 ```
 
-PowerShell notes:
+### Windows PowerShell
 
 ```powershell
-.\.venv\Scripts\Activate.ps1
-$env:PYTHONPATH="src"
+powershell -ExecutionPolicy Bypass -File .\scripts\bootstrap.ps1
 ```
 
-## Run locally
+## Run checks before opening a PR
 
 ```bash
-PYTHONPATH=src python -m flask --app wsgi:app db upgrade
-PYTHONPATH=src python -m flask --app wsgi:app run --debug
+bash scripts/lint.sh
+bash scripts/test.sh
 ```
 
-## Quality gates
+## Pull request expectations
 
-```bash
-python -m ruff check .
-python -m black --check .
-python -m pytest
-```
-
-## Pull requests
-
-- Keep changes focused.
-- Add/adjust tests for behavior changes.
-- Update docs when behavior or setup changes.
+- Keep changes focused and reviewable.
+- Add or update tests for behavior changes.
+- Update docs for setup/runtime/API changes.
 - Update `CHANGELOG.md` for user-visible changes.
+- Ensure CI is green.

@@ -2,25 +2,24 @@
 
 ## Our Pledge
 
-We are committed to making participation in this project a harassment-free experience for everyone.
+We are committed to maintaining a respectful, inclusive, and harassment-free community.
 
-## Expected Behavior
+## Expected behavior
 
-- Be respectful and inclusive.
-- Accept constructive feedback.
-- Focus on what is best for the community.
-- Show empathy toward other contributors.
+- Be respectful and constructive.
+- Accept feedback professionally.
+- Prioritize collaboration and project health.
 
-## Unacceptable Behavior
+## Unacceptable behavior
 
 - Harassment or discrimination.
-- Trolling, insults, or personal attacks.
-- Public or private intimidation.
+- Personal attacks, insults, or threats.
+- Publishing private information without consent.
 
 ## Enforcement
 
-Project maintainers are responsible for clarifying standards and may remove, edit, or reject contributions that violate this code.
+Maintainers may remove or reject contributions that violate this code.
 
 ## Reporting
 
-Report unacceptable behavior to the maintainers via the security contact channel in `SECURITY.md`.
+Report serious conduct issues to **Azeiynali@gmail.com**.

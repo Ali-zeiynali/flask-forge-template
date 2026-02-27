@@ -1,25 +1,29 @@
 # Architecture
 
-## Runtime layout
+## Runtime structure
 
-- `src/app.py`: application factory and extension/blueprint registration.
-- `src/flaskforge/wsgi.py`: package-based WSGI entrypoint for Flask CLI.
-- `src/config.py`: environment-aware config classes.
-- `src/api/v1/`: versioned API modules (`health`, `auth`, `users`, `admin`).
-- `src/core/`: shared concerns (logging, errors, response contract, authz).
-- `src/extensions/`: db/migrations/cors/jwt/security-headers integrations.
+- `src/app.py`: app factory, extension setup, blueprint registration.
+- `src/flaskforge/wsgi.py`: canonical package entrypoint.
+- `src/wsgi.py`: compatibility entrypoint used by Docker command.
+- `src/config.py`: config classes and env parsing.
+- `src/models.py`: user/role/permission models and association tables.
 
-Compatibility aliases are kept in `src/api/*.py` so both `/api/*` and `/api/v1/*` stay active.
+## API module pattern
 
-## Request flow
+`src/api/v1/users` demonstrates the preferred pattern:
 
-1. `create_app` loads selected config and initializes extensions.
-2. JWT, DB, migrations, CORS, and security headers are wired from config.
-3. Blueprints are mounted for both `/api` and `/api/v1`.
-4. Errors are normalized by `core.errors.register_error_handlers`.
+- `routes.py`: HTTP handlers and decorators
+- `schemas.py`: request parsing/validation
+- `service.py`: business logic
+- `repo.py`: DB access helpers
+- `models.py`: module-facing model aliases
 
-## Data layer
+Apply this same structure for new domain modules.
 
-- Core models live in `src/models.py`: `User`, `Role`, `Permission`, and association tables.
-- SQLite is default for local development.
-- Migrations are managed through Flask-Migrate + Alembic in `src/migrations`.
+## Request lifecycle
+
+1. `create_app` loads config class.
+2. Extensions (`db`, `migrate`, `jwt`, `cors`, security headers) are initialized.
+3. Web blueprint mounts `/`.
+4. API blueprints mount on `/api` and `/api/v1`.
+5. Errors are normalized by global error handlers.

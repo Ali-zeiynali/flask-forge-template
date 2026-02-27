@@ -33,7 +33,7 @@ class BaseConfig:
     FORCE_HTTPS = get_bool("FORCE_HTTPS", False)
 
     DOCS_URL = get_env("DOCS_URL", "/docs/index.md")
-    GITHUB_URL = get_env("GITHUB_URL", "https://github.com/example/flask-forge-template")
+    GITHUB_URL = get_env("GITHUB_URL", "https://github.com/Ali-zeiynali/flask-forge-template")
     CI_STATUS = get_env("CI_STATUS", "Passing")
 
 

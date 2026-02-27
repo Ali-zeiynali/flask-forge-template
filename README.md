@@ -1,289 +1,202 @@
 <p align="center">
-  <img src="assets/images/logo.png" width="380" alt="Flask Forge Template Logo"/>
+    <img src="assets/images/logo.png" width="380" alt="Flask Forge Template Logo"/>
 </p>
 
-<h1 align="center">Flask Forge Template 🚀</h1>
+<h1 align="center">Flask Forge Template</h1>
 
 <p align="center">
-Production-ready Flask API template with secure authentication, RBAC, modern tooling, and clean architecture.
-</p>
-
-<p align="center">
-  Built for real-world backend systems — not just demos.
+A production-oriented Flask starter for teams that want authentication, RBAC, migrations, tests, and Docker setup from day one.
 </p>
 
 ---
 
-# 🔥 Why Flask Forge Template?
+## Overview
 
-Starting a Flask project usually means:
+`flask-forge-template` is a backend template maintained by **Ali Zeiynali** for quickly bootstrapping real Flask services.
 
-- Rewriting auth from scratch  
-- Reinventing RBAC  
-- Wiring CI, linting, formatting  
-- Setting up Docker  
-- Fighting with migrations  
-- Adding security headers later  
-- Writing tests “someday”  
+Instead of spending the first week rebuilding auth, users, migrations, and project structure, you can clone this template and start implementing product logic immediately.
 
-**Flask Forge Template solves all of that upfront.**
+Repository: https://github.com/Ali-zeiynali/flask-forge-template  
+Maintainer: Ali Zeiynali  
+Contact: Azeiynali@gmail.com
 
-It gives you a structured, scalable, security-aware backend foundation — ready for production workflows.
+## What is implemented
 
----
+This repository currently includes:
 
-# ✨ Core Features
+- Flask application factory with config classes (`development`, `testing`, `production`)
+- JWT auth endpoints (`register`, `login`, `refresh`, `logout`, `me`)
+- Role and permission based access control with decorators
+- Users API with service/repository/schema layering in `src/api/v1/users`
+- Admin API for managing roles/permissions and assignments
+- Database integration with SQLAlchemy + Flask-Migrate/Alembic
+- Landing page at `/` with quick status cards
+- Test suite (auth, admin, users, health, web)
+- Linting/formatting/security scripts and GitHub CI workflow
+- Dockerfile + docker-compose for containerized runs
 
-### 🔐 Authentication
-- JWT-based authentication
-- Register / Login / Refresh / Logout / Me
-- Secure password hashing (bcrypt/argon2)
-- Token protection & validation
+## Project layout
 
-### 🛡️ Authorization (RBAC)
-- Role-Based Access Control
-- Permission system (`users:read`, `users:write`, etc.)
-- Decorators:
-  - `@require_auth`
-  - `@require_roles`
-  - `@require_permissions`
-  - Owner-or-permission checks
+```text
+src/
+    app.py                      # Flask app factory
+    flaskforge/wsgi.py          # Canonical Flask CLI/Gunicorn entrypoint
+    cli.py                      # Custom `flask forge ...` commands
+    config.py                   # Config and env var mapping
+    models.py                   # SQLAlchemy models (User/Role/Permission)
+    api/v1/                     # Versioned API modules
+    core/                       # Shared authz/errors/security/response helpers
+    extensions/                 # DB, JWT, migrate, CORS, security headers
+    web/                        # Landing page blueprint and templates
+    migrations/                 # Alembic migration scripts
 
-### 🧱 Clean Architecture
-- Feature-based API modules
-- Centralized error handling
-- Standardized response envelope
-- Config-driven environment setup
+docs/                           # Detailed guides
+scripts/                        # Bootstrap/test/lint/format/audit helpers
+tests/                          # Pytest test suite
+```
 
-### 🧪 Testing & Quality
-- pytest test suite
-- Coverage support
-- Fixture-based isolation
-- CI enforced quality gates
+## Quickstart (local development)
 
-### 🔎 Code Quality
-- ruff (linting)
-- black (formatting)
-- Strict style enforcement
-- Optional security scan via bandit
+### Prerequisites
 
-### 🔒 Security
-- Security headers (CSP, HSTS, etc.)
-- Password hashing best practices
-- Optional rate limiting
-- Dependency audit support (`pip-audit`)
+- Python 3.12+
+- Git
 
-### 🗄️ Database
-- SQLAlchemy 2.x
-- Flask-Migrate / Alembic
-- Migration-first workflow
+### macOS / Linux (bash)
 
-### 🐳 Docker
-- Dockerfile ready
-- docker-compose for development
+```bash
+bash scripts/bootstrap.sh
+```
 
-### 🌐 Built-in Landing Page
-- Tailwind-powered dark theme
-- Health & system overview
-- Next steps guidance
-- Confirms correct setup
+What the script does:
 
----
+1. Creates `.venv` if missing
+2. Installs package + dev dependencies
+3. Creates `.env` from `.env.example` when needed
+4. Runs DB migrations
+5. Seeds RBAC data
+6. Optionally prompts to create an admin user
 
-# 🚀 Quickstart
+Then start the server:
 
-## Windows (PowerShell)
+```bash
+source .venv/bin/activate
+python -m flask --app flaskforge.wsgi:app run --debug
+```
+
+### Windows (PowerShell)
 
 ```powershell
-python -m venv .venv
+powershell -ExecutionPolicy Bypass -File .\scripts\bootstrap.ps1
+```
+
+Then start the server:
+
+```powershell
 .\.venv\Scripts\Activate.ps1
+python -m flask --app flaskforge.wsgi:app run --debug
+```
 
-python -m pip install --upgrade pip
-python -m pip install -e ".[dev]"
+### Verify the app is running
 
-Copy-Item .env.example .env
+- Landing page: http://127.0.0.1:5000
+- Health API: http://127.0.0.1:5000/api/health
+- Versioned health API: http://127.0.0.1:5000/api/v1/health
 
-$env:PYTHONPATH="src"
+## Docker and docker-compose
 
-PYTHONPATH=src python -m flask --app flaskforge.wsgi:app db upgrade
-PYTHONPATH=src python -m flask --app flaskforge.wsgi:app forge seed
-PYTHONPATH=src python -m flask --app flaskforge.wsgi:app forge create-admin --email admin@example.com --password Password123
+### Docker
 
-PYTHONPATH=src python -m flask --app flaskforge.wsgi:app run --debug
-````
+```bash
+docker build -t flask-forge-template .
+docker run --rm -p 8000:8000 --env-file .env flask-forge-template
+```
 
 Open:
 
-```
-http://127.0.0.1:5000
-```
+- http://127.0.0.1:8000/
+- http://127.0.0.1:8000/api/health
 
----
-
-## macOS / Linux (bash)
+### docker-compose
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
-
-python -m pip install --upgrade pip
-python -m pip install -e ".[dev]"
-
-cp .env.example .env
-
-PYTHONPATH=src python -m flask --app flaskforge.wsgi:app db upgrade
-PYTHONPATH=src python -m flask --app flaskforge.wsgi:app forge seed
-PYTHONPATH=src python -m flask --app flaskforge.wsgi:app forge create-admin --email admin@example.com --password Password123
-
-PYTHONPATH=src python -m flask --app flaskforge.wsgi:app run --debug
+docker compose up --build
 ```
 
----
+`docker-compose.yml` runs migrations before starting Gunicorn, so the API should be usable after startup logs settle.
 
-# 🛠 Development Commands
+## Configuration model
+
+Configuration is read from environment variables in `src/config.py`.
+
+- Copy `.env.example` to `.env`
+- Override values based on your environment
+- `APP_ENV` controls config class selection (`development`, `testing`, `production`)
+
+Important variables:
+
+- `SECRET_KEY`, `JWT_SECRET_KEY`
+- `DATABASE_URL`
+- `JWT_ACCESS_EXPIRES`, `JWT_REFRESH_EXPIRES`
+- `CORS_ORIGINS`
+- `SECURITY_HEADERS_ENABLED`, `FORCE_HTTPS`, `ENABLE_HSTS`
+- `DOCS_URL`, `GITHUB_URL`, `CI_STATUS` (used by landing page)
+
+## Day-to-day development commands
 
 ```bash
-# Lint
-python -m ruff check .
+# lint
+bash scripts/lint.sh
 
-# Format check
-python -m black --check .
+# format
+bash scripts/format.sh
 
-# Run tests
-PYTHONPATH=src python -m pytest
+# tests + coverage
+bash scripts/test.sh
 
-# Run tests with coverage
-PYTHONPATH=src python -m pytest --cov=src --cov-report=term-missing
+# security checks
+bash scripts/audit.sh
 
-# Security scan
-python -m bandit -r src
-python -m pip_audit
+# migrations + seed only
+bash scripts/init_db.sh
 ```
 
----
+## Database, migrations, seed, admin
 
-# 🏗 Project Structure
-
-```
-src/
-  api/            # API modules (health, auth, users, admin)
-  core/           # errors, responses, authz, security helpers
-  extensions/     # db, migrate, jwt, cors, security headers
-  web/            # landing blueprint + templates
-  cli.py          # custom forge CLI commands
-  app.py          # application factory
-  wsgi.py         # entrypoint
-
-tests/            # pytest test suite
-docs/             # in-depth documentation
-assets/           # project assets (logo, images)
+```bash
+python -m flask --app flaskforge.wsgi:app db upgrade
+python -m flask --app flaskforge.wsgi:app forge seed
+python -m flask --app flaskforge.wsgi:app forge create-admin --email admin@yourdomain.com --password '<strong-password>' --full-name 'Admin User'
 ```
 
----
+## Next steps after generating your own project
 
-# 🔐 RBAC Example
+1. Rename package/app metadata (`APP_NAME`, `APP_VERSION`, docs title).
+2. Change secrets and database settings in `.env`.
+3. Customize RBAC defaults in `src/cli.py` (`DEFAULT_ROLE_PERMISSIONS`).
+4. Implement your domain modules using the `route -> schema -> service -> repo` structure under `src/api/v1`.
+5. Replace landing page links (`DOCS_URL`, `GITHUB_URL`) and update template branding.
+6. Add project-specific CI checks and deployment targets.
 
-Protect an endpoint:
+## Documentation map
 
-```python
-@require_permissions("users:read")
-def get_users():
-    ...
-```
+- [Documentation index](docs/index.md)
+- [Development guide](docs/development.md)
+- [Configuration guide](docs/configuration.md)
+- [API guide](docs/api.md)
+- [Authentication guide](docs/auth.md)
+- [RBAC guide](docs/rbac.md)
+- [CLI guide](docs/cli.md)
+- [Testing guide](docs/testing.md)
+- [Deployment guide](docs/deployment.md)
+- [Security guide](docs/security.md)
 
-Admin-only route:
+## Contributing and security
 
-```python
-@require_roles("admin")
-def create_role():
-    ...
-```
+- Contribution process: [CONTRIBUTING.md](CONTRIBUTING.md)
+- Security reporting: [SECURITY.md](SECURITY.md)
+- Community standards: [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
 
----
+## License
 
-# 📚 Documentation
-
-* [API Overview](docs/api.md)
-* [Authentication Guide](docs/auth.md)
-* [RBAC Guide](docs/rbac.md)
-* [Security Guide](docs/security.md)
-* [CLI Commands](docs/cli.md)
-* [Testing Guide](docs/testing.md)
-
----
-
-# 🧪 Testing Philosophy
-
-This template enforces:
-
-* Isolated test DB
-* Real auth flows in tests
-* Permission boundary validation
-* Negative case testing (401 / 403 / 404 / 409)
-
-Production-ready behavior is tested — not just happy paths.
-
----
-
-# 🤝 Contributing
-
-We welcome improvements.
-
-Workflow:
-
-1. Create issue
-2. Create feature branch
-3. Run lint & tests
-4. Open PR to `develop`
-5. CI must pass
-
-See: [CONTRIBUTING.md](CONTRIBUTING.md)
-
----
-
-# 🔒 Security
-
-If you discover a vulnerability:
-
-* Do NOT open a public issue
-* Follow instructions in [SECURITY.md](SECURITY.md)
-
-Security documentation:
-
-* [docs/security.md](docs/security.md)
-
----
-
-# 🗺 Roadmap
-
-Future improvements:
-
-* OpenAPI / Swagger UI
-* Async support option
-* Plugin system
-* Form builder utilities
-* Audit logging
-* Multi-tenant support
-* Redis-backed rate limiting
-* Observability (structured logging / tracing)
-
----
-
-# 📄 License
-
-MIT License
-See [LICENSE](LICENSE)
-
----
-
-# ⭐ Final Notes
-
-Flask Forge Template is designed to be:
-
-* Structured
-* Secure
-* Scalable
-* Developer-friendly
-* Production-minded
-
-If you find it useful, ⭐ the repo and contribute.
+MIT — see [LICENSE](LICENSE).

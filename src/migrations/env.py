@@ -1,11 +1,12 @@
 from logging.config import fileConfig
+from pathlib import Path
 
 from alembic import context
 from flask import current_app
 
 config = context.config
 
-if config.config_file_name is not None:
+if config.config_file_name is not None and Path(config.config_file_name).exists():
     fileConfig(config.config_file_name)
 
 

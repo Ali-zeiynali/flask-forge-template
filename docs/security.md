@@ -1,37 +1,35 @@
-# Security
+# Security Guide
 
 ## Security headers
 
-`Flask-Talisman` is enabled through `init_security_headers`.
+Headers are configured via `Flask-Talisman` in `src/extensions/security_headers.py`.
 
-Config flags:
+Relevant flags:
 
-- `ENABLE_SECURITY_HEADERS` (default: `true`)
-- `FORCE_HTTPS` (default: `false`, production: `true`)
-- `ENABLE_HSTS` (default: `false`, production: `true`)
+- `SECURITY_HEADERS_ENABLED`
+- `FORCE_HTTPS`
+- `ENABLE_HSTS`
 
-Default CSP allows local assets plus Tailwind CDN.
+## Password handling
 
-## Password hashing
+- New passwords are hashed with Argon2.
+- Legacy `scrypt` hashes remain verifiable for compatibility.
 
-New passwords use `argon2-cffi` (`argon2`) for stronger hashing defaults.
+## Authentication and authorization
 
-Backward compatibility is preserved for existing `werkzeug` `scrypt:` hashes:
+- JWT access/refresh tokens via `Flask-JWT-Extended`
+- Role/permission checks in `src/core/authz.py`
 
-- verify legacy `scrypt` hashes
-- hash new passwords with `argon2`
+## Login rate limiting
 
-## Rate limiting
+- In-memory per-IP limit on login endpoint.
+- Controlled by `RATE_LIMIT_ENABLED` and `RATE_LIMIT_LOGIN_PER_MINUTE`.
 
-Login endpoint has in-memory per-IP limiting via `RATE_LIMIT_LOGIN_PER_MINUTE`.
-
-## Security tooling
-
-Run audits with Python modules:
+## Security checks
 
 ```bash
 python -m bandit -r src
 python -m pip_audit
 ```
 
-CI includes a dedicated `security` job for these checks.
+For vulnerability reporting, see [SECURITY.md](../SECURITY.md).

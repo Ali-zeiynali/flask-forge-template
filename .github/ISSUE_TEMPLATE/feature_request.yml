@@ -1,7 +1,12 @@
 name: Feature request
-description: Suggest an improvement
+description: Suggest an improvement for Flask Forge Template
 labels: [enhancement]
 body:
+    - type: markdown
+      attributes:
+          value: |
+              Before proposing a feature, check existing issues in:
+              https://github.com/Ali-zeiynali/flask-forge-template/issues
     - type: textarea
       id: problem
       attributes:

@@ -27,3 +27,12 @@ python -m ruff check --fix .
 python -m bandit -r src
 python -m pip_audit
 ```
+
+## Script shortcuts
+
+```bash
+bash scripts/lint.sh
+bash scripts/format.sh
+bash scripts/test.sh
+bash scripts/audit.sh
+```
