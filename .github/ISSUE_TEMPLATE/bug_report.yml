@@ -1,7 +1,12 @@
 name: Bug report
-description: Report a reproducible bug
+description: Report a reproducible bug in Flask Forge Template
 labels: [bug]
 body:
+    - type: markdown
+      attributes:
+          value: |
+              Thanks for helping improve Flask Forge Template.
+              Repository: https://github.com/Ali-zeiynali/flask-forge-template
     - type: textarea
       id: summary
       attributes:
@@ -27,3 +32,10 @@ body:
           label: Actual behavior
       validations:
           required: true
+    - type: input
+      id: contact
+      attributes:
+          label: Optional contact email
+          description: If you want maintainers to follow up privately
+      validations:
+          required: false

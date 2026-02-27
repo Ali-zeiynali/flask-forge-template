@@ -1,8 +1,17 @@
-# API
+# API Guide
 
-## Response contract
+## Base paths
 
-Success:
+All implemented endpoints are mounted on both:
+
+- `/api/*`
+- `/api/v1/*`
+
+This keeps compatibility while encouraging versioned usage.
+
+## Response envelope
+
+Success responses:
 
 ```json
 {
@@ -11,7 +20,7 @@ Success:
 }
 ```
 
-Error:
+Error responses:
 
 ```json
 {
@@ -23,18 +32,14 @@ Error:
 }
 ```
 
-## Health
+## Endpoint groups
+
+### Health
 
 - `GET /api/health`
 - `GET /api/v1/health`
 
-Both return envelope data:
-
-```json
-{"data": {"status": "ok"}}
-```
-
-## Auth
+### Auth
 
 - `POST /api/auth/register`
 - `POST /api/auth/login`
@@ -42,38 +47,19 @@ Both return envelope data:
 - `POST /api/auth/logout`
 - `GET /api/auth/me`
 
-All endpoints are also available under `/api/v1/auth/*`.
-
-## Users
+### Users
 
 - `POST /api/users`
-- `GET /api/users/{id}`
-- `GET /api/users?page=1&page_size=10`
-- `PATCH /api/users/{id}`
-- `DELETE /api/users/{id}`
+- `GET /api/users`
+- `GET /api/users/{user_id}`
+- `PATCH /api/users/{user_id}`
+- `DELETE /api/users/{user_id}`
 
-All endpoints are also available under `/api/v1/users/*`.
-
-Pagination meta:
-
-```json
-{
-    "page": 1,
-    "page_size": 10,
-    "total": 120,
-    "has_next": true
-}
-```
-
-## Admin
-
-All endpoints require `admin` role.
+### Admin (role required: `admin`)
 
 - `GET/POST /api/admin/roles`
-- `PATCH/DELETE /api/admin/roles/{id}`
+- `PATCH/DELETE /api/admin/roles/{role_id}`
 - `GET/POST /api/admin/permissions`
-- `PATCH/DELETE /api/admin/permissions/{id}`
-- `POST /api/admin/users/{id}/roles`
-- `POST /api/admin/roles/{id}/permissions`
-
-All endpoints are also available under `/api/v1/admin/*`.
+- `PATCH/DELETE /api/admin/permissions/{permission_id}`
+- `POST /api/admin/users/{user_id}/roles`
+- `POST /api/admin/roles/{role_id}/permissions`

@@ -1,24 +1,20 @@
-# Documentation Index
+# Flask Forge Template Documentation
 
-## Getting Started
+This documentation is written for developers who cloned the template and want to ship a real project quickly.
 
-- [Development](development.md)
-- [Configuration](configuration.md)
-- [Deployment](deployment.md)
-- [CLI](cli.md)
+## Start here
 
-## Product and Architecture
+1. [Development](development.md)
+2. [Configuration](configuration.md)
+3. [API](api.md)
+4. [Authentication](auth.md)
+5. [RBAC](rbac.md)
+6. [Deployment](deployment.md)
+
+## Reference guides
 
 - [Architecture](architecture.md)
-- [Frontend Landing](frontend.md)
-
-## API and Access Control
-
-- [API](api.md)
-- [Authentication](auth.md)
-- [RBAC](rbac.md)
-
-## Quality and Security
-
-- [Testing](testing.md)
+- [CLI commands](cli.md)
+- [Testing and quality](testing.md)
 - [Security](security.md)
+- [Frontend landing page](frontend.md)

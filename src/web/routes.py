@@ -21,6 +21,6 @@ def index():
         status_cards=status_cards,
         docs_url=current_app.config.get("DOCS_URL", "/docs/index.md"),
         github_url=current_app.config.get(
-            "GITHUB_URL", "https://github.com/example/flask-forge-template"
+            "GITHUB_URL", "https://github.com/Ali-zeiynali/flask-forge-template"
         ),
     )

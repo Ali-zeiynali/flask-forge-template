@@ -23,7 +23,7 @@ def create_app(config_name: str | None = None) -> Flask:
 
     configure_logging(app)
     db.init_app(app)
-    migrate.init_app(app, db)
+    migrate.init_app(app, db, directory="src/migrations")
     init_jwt(app)
     init_cors(app)
     init_security_headers(app)

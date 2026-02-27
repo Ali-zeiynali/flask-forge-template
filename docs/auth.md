@@ -1,18 +1,17 @@
-# Authentication
+# Authentication Guide
 
-## Endpoints
+Authentication is implemented with `Flask-JWT-Extended` and Argon2 password hashing.
 
-- `POST /api/auth/register`
-- `POST /api/auth/login`
-- `POST /api/auth/refresh`
-- `POST /api/auth/logout`
-- `GET /api/auth/me`
+## Flow
 
-Versioned aliases exist under `/api/v1/auth/*`.
+1. Register (`POST /api/auth/register`) or seed/create users through CLI.
+2. Login (`POST /api/auth/login`) to get access and refresh tokens.
+3. Use access token for protected endpoints.
+4. Refresh access token via `POST /api/auth/refresh` with refresh token.
+5. Revoke current access token via `POST /api/auth/logout`.
 
 ## Notes
 
-- Access/refresh tokens are JWT-based.
-- Password hashing uses Argon2.
-- Refresh requires refresh token.
-- Logout revokes the current access token in memory blocklist.
+- `GET /api/auth/me` returns the authenticated user profile.
+- Logout uses in-memory token revocation, which is suitable for a template/dev setup.
+- Existing legacy `scrypt` password hashes are still verifiable; new hashes use Argon2.

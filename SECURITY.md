@@ -2,17 +2,17 @@
 
 ## Supported versions
 
-Security updates are provided for the latest release line.
+Security updates are provided for the latest release line on this repository.
 
 ## Reporting a vulnerability
 
-Please report vulnerabilities privately to: `security@example.com`
+Please report vulnerabilities privately to **Azeiynali@gmail.com**.
 
 Include:
 
 - affected version or commit
 - reproduction steps
 - expected impact
-- proof-of-concept if available
+- proof-of-concept (if available)
 
-We will acknowledge receipt, validate the issue, and coordinate a fix/release timeline.
+Please do not open public issues for unpatched vulnerabilities.

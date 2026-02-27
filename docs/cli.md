@@ -1,22 +1,36 @@
 # CLI Commands
 
-Use `python -m` style commands.
+The project exposes custom commands under `flask forge`.
 
-## Seed RBAC
+## Entry point
 
 ```bash
-PYTHONPATH=src python -m flask --app wsgi:app forge seed
+python -m flask --app flaskforge.wsgi:app <command>
 ```
 
-## Create or update admin
+## Commands
+
+### Migrations
 
 ```bash
-PYTHONPATH=src python -m flask --app wsgi:app forge create-admin --email admin@example.com --password Password123
+python -m flask --app flaskforge.wsgi:app db upgrade
+python -m flask --app flaskforge.wsgi:app db migrate -m "message"
 ```
 
-## Migrations
+### RBAC seed
 
 ```bash
-PYTHONPATH=src python -m flask --app wsgi:app db upgrade
-PYTHONPATH=src python -m flask --app wsgi:app db migrate -m "message"
+python -m flask --app flaskforge.wsgi:app forge seed
+```
+
+### Create/update admin
+
+```bash
+python -m flask --app flaskforge.wsgi:app forge create-admin --email admin@yourdomain.com --password '<strong-password>' --full-name 'Admin User'
+```
+
+### Environment diagnostics
+
+```bash
+python -m flask --app flaskforge.wsgi:app forge doctor
 ```

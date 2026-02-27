@@ -6,16 +6,19 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
-- Package compatibility entrypoint `src/flaskforge/wsgi.py` so Flask can run with `--app flaskforge.wsgi:app`.
-- Versioned admin module under `api/v1/admin` with role/permission management and assignment endpoints.
+- Added `scripts/bootstrap.sh` and `scripts/bootstrap.ps1` to provide one-command setup on macOS/Linux and Windows.
+- Expanded documentation coverage for development, configuration, API, auth, RBAC, testing, security, deployment, and architecture.
 
 ### Changed
 
-- Completed `api/v1` modules for auth/users with real schema validation, services, repository usage, and runtime RBAC enforcement.
-- Preserved `/api/*` endpoints as compatibility aliases while wiring the canonical implementation in `/api/v1/*`.
-- Unified health endpoint contract to the same envelope used by the rest of the API.
-- Updated `scripts/init_db.sh` to run migrations plus RBAC seed.
-- Synced API/auth/RBAC/architecture docs and README command examples with actual runtime behavior.
+- Rewrote `README.md` with verified quickstart flows (local + Docker), endpoint verification steps, and practical next steps for template users.
+- Updated docs and command examples to use the canonical Flask entrypoint `flaskforge.wsgi:app` where appropriate.
+- Updated repository identity links and security contact details across docs and GitHub templates.
+- Updated default `GITHUB_URL` values in runtime config and `.env.example`.
+
+### Removed
+
+- Removed empty tracked files: `uv.lock`, `src/migrations/versions/.keep`, and `src/instance/dev.db`.
 
 ## [0.1.0] - 2026-02-27
 
