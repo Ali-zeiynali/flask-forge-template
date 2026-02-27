@@ -96,3 +96,164 @@ scripts/                  # Bootstrap / lint / test / format / audit helpers
 tests/                    # Pytest test suite
 assets/                   # Logos and images
 ```
+
+---
+
+## 🚀 Quickstart (Local Development)
+
+### Requirements
+
+- 🐍 Python **3.12+**
+- 🔧 Git
+
+### macOS / Linux (bash)
+
+```bash
+bash scripts/bootstrap.sh
+```
+
+Then run:
+
+```bash
+source .venv/bin/activate
+PYTHONPATH=src python -m flask --app flaskforge.wsgi:app run --debug
+```
+
+### Windows (PowerShell)
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\bootstrap.ps1
+```
+
+Then run:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+$env:PYTHONPATH="src"
+python -m flask --app flaskforge.wsgi:app run --debug
+```
+
+---
+
+## 🔎 Verify It’s Working
+
+- 🌙 Landing page: [http://127.0.0.1:5000/](http://127.0.0.1:5000/)
+- ❤️ Health: [http://127.0.0.1:5000/api/health](http://127.0.0.1:5000/api/health)
+- ❤️ v1 Health: [http://127.0.0.1:5000/api/v1/health](http://127.0.0.1:5000/api/v1/health)
+
+---
+
+## 🐳 Run With Docker
+
+### Docker
+
+```bash
+docker build -t flask-forge-template .
+docker run --rm -p 8000:8000 --env-file .env flask-forge-template
+```
+
+Open:
+
+- [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+- [http://127.0.0.1:8000/api/health](http://127.0.0.1:8000/api/health)
+
+### docker-compose
+
+```bash
+docker compose up --build
+```
+
+---
+
+## ⚙️ Configuration
+
+All configuration is env-driven in `flaskforge/config.py`.
+
+1. Copy `.env.example` → `.env`
+2. Set:
+
+- `APP_ENV` (`development` / `testing` / `production`)
+- `DATABASE_URL`
+- `SECRET_KEY`, `JWT_SECRET_KEY`
+- `CORS_ORIGINS`
+- Security toggles (headers/HSTS/HTTPS) if enabled
+
+See: **[docs/configuration.md](docs/configuration.md)**
+
+---
+
+## 🧰 Daily Dev Commands
+
+```bash
+# Lint / Format / Tests / Audit
+bash scripts/lint.sh
+bash scripts/format.sh
+bash scripts/test.sh
+bash scripts/audit.sh
+
+# Migrations + seed
+bash scripts/init_db.sh
+```
+
+---
+
+## 👑 DB + Seed + Create Admin
+
+```bash
+PYTHONPATH=src python -m flask --app flaskforge.wsgi:app db upgrade
+PYTHONPATH=src python -m flask --app flaskforge.wsgi:app forge seed
+PYTHONPATH=src python -m flask --app flaskforge.wsgi:app forge create-admin \
+  --email admin@yourdomain.com \
+  --password '<strong-password>' \
+  --full-name 'Admin User'
+```
+
+---
+
+## 🧭 Next Steps (Using This as Your Own Project)
+
+1. Update branding + metadata (project name/version/docs title).
+2. Change secrets and DB settings in `.env`.
+3. Adjust RBAC defaults in CLI seed config.
+4. Add new API modules under `api/v1/<feature>/` using route → schema → service → repo.
+5. Update landing page links (Docs/GitHub) if you host docs on GitHub Pages.
+6. Add deployment targets (gunicorn, Docker, CI/CD, cloud).
+
+---
+
+## 📚 Documentation Map
+
+- 📌 [Docs Index](docs/index.md)
+- 🧱 [Architecture](docs/architecture.md)
+- ⚙️ [Configuration](docs/configuration.md)
+- 🧑‍💻 [Development](docs/development.md)
+- 🔌 [API Reference](docs/api.md)
+- 🔐 [Auth Guide](docs/auth.md)
+- 🛡️ [RBAC Guide](docs/rbac.md)
+- 🧰 [CLI Guide](docs/cli.md)
+- 🧪 [Testing](docs/testing.md)
+- 🚢 [Deployment](docs/deployment.md)
+- 🔒 [Security](docs/security.md)
+
+---
+
+## 🤝 Contributing
+
+PRs are welcome. Please read:
+
+- [CONTRIBUTING.md](CONTRIBUTING.md)
+- [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
+
+---
+
+## 🔒 Security
+
+If you discover a vulnerability, please follow:
+
+- [SECURITY.md](SECURITY.md)
+
+---
+
+## 📄 License
+
+MIT — see [LICENSE](LICENSE).
