@@ -4,46 +4,34 @@ from typing import Any
 
 from flask import Blueprint, request
 
+from core.authz import require_owner_or_permission, require_permissions
 from core.errors import APIError
 from core.responses import created_response, no_content_response, success_response
 from extensions.db import db
+from models import User
 
 users_bp = Blueprint("users", __name__)
 
 
-class User(db.Model):
-    __tablename__ = "users"
-
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(255), unique=True, nullable=False, index=True)
-    full_name = db.Column(db.String(255), nullable=False)
-    is_active = db.Column(db.Boolean, nullable=False, default=True)
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "id": self.id,
-            "email": self.email,
-            "full_name": self.full_name,
-            "is_active": self.is_active,
-        }
-
-
-def _validate_create_payload(payload: dict[str, Any] | None) -> tuple[str, str, bool]:
+def _validate_create_payload(payload: dict[str, Any] | None) -> tuple[str, str, str, bool]:
     if not payload:
         raise APIError("invalid_payload", "Request body is required.", 400)
 
     email = str(payload.get("email", "")).strip().lower()
     full_name = str(payload.get("full_name", "")).strip()
+    password = str(payload.get("password", "")).strip()
     is_active = payload.get("is_active", True)
 
     if not email or "@" not in email:
         raise APIError("invalid_email", "A valid email is required.", 400)
     if not full_name:
         raise APIError("invalid_full_name", "full_name is required.", 400)
+    if not password or len(password) < 8:
+        raise APIError("invalid_password", "password must be at least 8 characters.", 400)
     if not isinstance(is_active, bool):
         raise APIError("invalid_is_active", "is_active must be a boolean.", 400)
 
-    return email, full_name, is_active
+    return email, full_name, password, is_active
 
 
 def _validate_patch_payload(payload: dict[str, Any] | None) -> dict[str, Any]:
@@ -89,13 +77,21 @@ def _get_user_or_404(user_id: int) -> User:
 
 
 @users_bp.post("/users")
+@require_permissions("users:write")
 def create_user():
-    email, full_name, is_active = _validate_create_payload(request.get_json(silent=True))
+    from core.security import hash_password
+
+    email, full_name, password, is_active = _validate_create_payload(request.get_json(silent=True))
 
     if User.query.filter_by(email=email).first() is not None:
         raise APIError("email_conflict", "User with this email already exists.", 409)
 
-    user = User(email=email, full_name=full_name, is_active=is_active)
+    user = User(
+        email=email,
+        full_name=full_name,
+        password_hash=hash_password(password),
+        is_active=is_active,
+    )
     db.session.add(user)
     db.session.commit()
 
@@ -103,22 +99,26 @@ def create_user():
 
 
 @users_bp.get("/users/<int:user_id>")
+@require_owner_or_permission("users:read")
 def get_user(user_id: int):
     user = _get_user_or_404(user_id)
     return success_response(user.to_dict())
 
 
 @users_bp.get("/users")
+@require_permissions("users:read")
 def list_users():
     page = request.args.get("page", default=1, type=int)
-    per_page = request.args.get("per_page", default=10, type=int)
+    page_size = request.args.get(
+        "page_size", request.args.get("per_page", default=10, type=int), type=int
+    )
 
-    if page < 1 or per_page < 1:
-        raise APIError("invalid_pagination", "page and per_page must be positive integers.", 400)
+    if page < 1 or page_size < 1:
+        raise APIError("invalid_pagination", "page and page_size must be positive integers.", 400)
 
     pagination = User.query.order_by(User.id.asc()).paginate(
         page=page,
-        per_page=min(per_page, 100),
+        per_page=min(page_size, 100),
         error_out=False,
     )
 
@@ -126,14 +126,15 @@ def list_users():
         [user.to_dict() for user in pagination.items],
         meta={
             "page": pagination.page,
-            "per_page": pagination.per_page,
+            "page_size": pagination.per_page,
             "total": pagination.total,
-            "pages": pagination.pages,
+            "has_next": pagination.has_next,
         },
     )
 
 
 @users_bp.patch("/users/<int:user_id>")
+@require_permissions("users:write")
 def update_user(user_id: int):
     user = _get_user_or_404(user_id)
     updates = _validate_patch_payload(request.get_json(silent=True))
@@ -151,6 +152,7 @@ def update_user(user_id: int):
 
 
 @users_bp.delete("/users/<int:user_id>")
+@require_permissions("users:write")
 def delete_user(user_id: int):
     user = _get_user_or_404(user_id)
     db.session.delete(user)

@@ -6,7 +6,7 @@ from flask import jsonify
 
 
 def success_response(data: Any, status_code: int = 200, meta: dict[str, Any] | None = None):
-    payload: dict[str, Any] = {"success": True, "data": data}
+    payload: dict[str, Any] = {"data": data}
     if meta is not None:
         payload["meta"] = meta
     return jsonify(payload), status_code
@@ -24,11 +24,10 @@ def error_response(
     code: str, message: str, status_code: int, details: dict[str, Any] | None = None
 ):
     payload: dict[str, Any] = {
-        "success": False,
         "error": {
             "code": code,
             "message": message,
-        },
+        }
     }
     if details:
         payload["error"]["details"] = details
