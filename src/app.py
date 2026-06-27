@@ -21,19 +21,20 @@ def create_app(config_name: str | None = None) -> Flask:
     app = Flask(__name__)
     app.config.from_object(get_config(config_name))
 
-    configure_logging(app)
     db.init_app(app)
     migrate.init_app(app, db, directory="src/migrations")
+    
+    configure_logging(app)
     init_jwt(app)
     init_cors(app)
     init_security_headers(app)
 
     app.register_blueprint(web_bp)
+    app.register_blueprint(auth_bp, url_prefix="/api")
     app.register_blueprint(health_bp, url_prefix="/api")
     app.register_blueprint(health_bp, url_prefix="/api/v1", name="health_v1")
     app.register_blueprint(users_bp, url_prefix="/api")
     app.register_blueprint(users_bp, url_prefix="/api/v1", name="users_v1")
-    app.register_blueprint(auth_bp, url_prefix="/api")
     app.register_blueprint(auth_bp, url_prefix="/api/v1", name="auth_v1")
     app.register_blueprint(admin_bp, url_prefix="/api")
     app.register_blueprint(admin_bp, url_prefix="/api/v1", name="admin_v1")
